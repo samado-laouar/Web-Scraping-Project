@@ -1,3 +1,7 @@
+#Laouar Abdessamed
+#Tougherghi Yacine
+
+
 import sys, re,os
 
 corpus_medical = open(sys.argv[1], 'r', encoding="utf-8").readlines()
