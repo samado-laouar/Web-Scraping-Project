@@ -1,5 +1,7 @@
 import os 
-#os.system("rd /s corpus-medical_snt")
+from os import path
+if path.exists("corpus-medical_snt"):
+	os.system("rd /s corpus-medical_snt")
 os.mkdir("corpus-medical_snt")
 os.system("UnitexToolLogger Normalize corpus-medical.txt -r Norm.txt")
 os.system("UnitexToolLogger Tokenize corpus-medical.snt -a Alphabet.txt")

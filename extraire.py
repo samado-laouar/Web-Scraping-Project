@@ -28,7 +28,6 @@ else:
 subst = open('subst.dic', 'w', encoding="utf-16-le")
 subst.write('\ufeff')
 info = open('infos.txt', 'w')
-infol = open('MedUrl.txt', 'w')
 
 cpt = 0
 # ord(char): elle prend un charactere et nous donne son code ASCII.
@@ -41,7 +40,6 @@ for i in range(first, last + 1):
     for j in medecine:
         # if j.startswith('é'):
         #     j = 'e' + j[1:]
-        infol.write(j + "\n")
         subst.write(j + ",.N+subst\n")
     # subst.write("\n")
 
@@ -51,4 +49,3 @@ for i in range(first, last + 1):
 info.write("Total number of medecine with substance preserved = " + str(cpt))
 subst.close()
 info.close()
-infol.close()

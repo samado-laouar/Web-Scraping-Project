@@ -2,6 +2,8 @@ import sys, re,os
 
 corpus_medical = open(sys.argv[1], 'r', encoding="utf-8").readlines()
 subst = open('subst.dic', 'r', encoding="utf-16-le").readlines()
+tmp1 = open('subst.dic', 'r', encoding="utf-16-le").readlines()
+
 enrich = open("subts_enrichi.dic", 'w', encoding="utf-16-le")
 
 enrich.write('\ufeff')
@@ -40,14 +42,58 @@ for i in enrich_list:
     # print(str(count) + " - " + i)
     count += 1
 enrich.close()
+tmp2  = open('subts_enrichi.dic', 'r', encoding="utf-16-le").readlines()
+cpt=0
+with open("infos3.txt", "w", encoding="utf-8") as fichier_write:
+    # Convertir les lignes en ensembles
+    tmp1_set = set(tmp1)
+    tmp2_set = set(tmp2)
 
+    # Trouver les éléments dans tmp2 qui ne sont pas dans tmp1
+    elements_to_write = tmp2_set - tmp1_set
 
+    # Écrire ces éléments dans le fichier_write
+    for element in elements_to_write:
+        cpt=cpt+1
+        fichier_write.write(element)
 
+fichier_write.close()
+# Lire le contenu de fichier_write.txt
+# Lire le contenu de infos3.txt
+with open("infos3.txt", "r", encoding="utf-8") as file_infos3:
+    contenu_infos3 = file_infos3.readlines()
+
+# Trier les éléments de infos3.txt
+elements_tries = sorted(contenu_infos3)
+
+# Écrire les éléments triés dans le fichier tri_infos3.txt
+with open("infos3.txt", "w", encoding="utf-8") as file_tri_infos3:
+    for element in elements_tries:
+        file_tri_infos3.write(element)
+
+# Ajouter le nombre d'éléments à la fin de tri_infos3.txt
+with open("infos3.txt", "a", encoding="utf-8") as file_tri_infos3:
+    nombre_elements = len(elements_tries)
+    file_tri_infos3.write("-----------------------------------------------------------------------------\n")
+    file_tri_infos3.write("le nombre de médicaments conservés pour l’enrichissement : " + str(nombre_elements) + "\n")
+    file_tri_infos3.write("-----------------------------------------------------------------------------\n")
+
+file_path = "infos3.txt"
+
+# Read the lines from the file
+with open(file_path, 'r', encoding='utf-8') as file:
+    lines = file.readlines()
+
+# Extract the words and remove the unnecessary parts
+extracted_words = [line.split(",")[0] for line in lines]
+
+# Write the extracted words back to the file
+with open(file_path, 'w', encoding='utf-8') as file:
+    file.writelines('\n'.join(extracted_words))
 
 
 # Building infos2.txt
 infos2 = open('infos2.txt', 'w')
-infos2l = open('MedCM.txt', 'w')
 count = 0
 # Utiliser une liste en compréhension pour convertir tous les éléments en minuscules
 enrich_list = [element.lower() for element in enrich_list]
@@ -58,67 +104,23 @@ first_char = enrich_list[0][0]
 for i in enrich_list:
     if (i.startswith(first_char)):
         infos2.write("\t"+i.lower()+"\n")
-        infos2l.write(i.lower()+"\n")
         count += 1
     else:
         infos2.write("--------------------------------------------\n")
         infos2.write("Nombre Total de '"+ first_char.upper() +"' : " + str(count) + "\n")
         infos2.write("--------------------------------------------\n")
         infos2.write("\t"+i.lower()+"\n")
-        infos2l.write(i.lower()+"\n")
         first_char = i[0]
         count = 1
 # Write the number with letter "Z"
-infos2.write("Number of medecines starting with letter '"+ first_char.upper() +"' : " + str(count) + "\n")
-infos2.write("\nTotal number of enriched medecines : " + str(len(enrich_list)))
+infos2.write("--------------------------------------------\n")
+infos2.write("Nombre Total de '"+ first_char.upper() +"' : " + str(count) + "\n")
+infos2.write("--------------------------------------------\n")
+infos2.write("-----------------------------------------------------------------------------\n")
+infos2.write("Le Nombre  total de médicaments issus du corpus : " + str(len(enrich_list))+"\n")
+infos2.write("-----------------------------------------------------------------------------\n")
 infos2.close()
-infos2l.close()
 
-
-# Définir le nom des fichiers
-# Définir le nom des fichiers
-fichier_enrichi = "MedCM.txt"
-fichier_subst = "MedUrl.txt"
-fichier_info = "infos3.txt"
-cpt=0
-# Lire les éléments du fichier enrichi
-with open(fichier_enrichi, 'r') as fichier_enrichi:
-    elements_enrichis = set(ligne.strip() for ligne in fichier_enrichi)
-
-# Lire les éléments du fichier subst
-with open(fichier_subst, 'r') as fichier_subst:
-    elements_subst = set(ligne.strip() for ligne in fichier_subst)
-
-# Ouvrir le fichier infos3.txt en mode écriture
-with open(fichier_info, 'w') as fichier_info:
-    # Parcourir les éléments du fichier enrichi
-    for element in elements_enrichis:
-        # Vérifier si l'élément est présent dans le fichier subst
-        if element not in elements_subst:
-            # Écrire l'élément dans le fichier infos3.txt
-            cpt=cpt+1
-            fichier_info.write(element + '\n')
-#print("Vérification terminée. Les éléments absents ont été écrits dans info3.txt.")
-
-
-file_path = "infos3.txt"
-
-# Read the lines from the file
-with open(file_path, 'r') as file:
-    lines = file.readlines()
-
-# Sort the lines
-sorted_lines = sorted(lines)
-
-# Write the sorted lines back to the file
-with open(file_path, 'w') as file:
-    file.writelines(sorted_lines)
-    file.write("Nombre total de médicaments conservés pour l’enrichissement : " + str(cpt) + "\n")
-
-
-infos2l.close()
-#os.remove("m.txt")
-#os.remove("l.txt")
 
 
 # Updating the subst.dic with all new changes
