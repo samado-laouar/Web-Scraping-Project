@@ -43,7 +43,7 @@ for i in corpus_medical:
     if another_token1:
         medecine = str(another_token1.group(1)).lower()
         # some special cases that should not be included
-        if not medecine.startswith("ø") and medecine != "témesta" and medecine != "intraveineuse" and medecine != "kardégic"and medecine != "b"and medecine != "crp"and medecine != "kcl" and medecine != "kt":
+        if not medecine.startswith("ø") and medecine != "témesta" and medecine != "intraveineuse" and medecine != "kardégic"and medecine != 'b' and medecine != "crp"and medecine != "kcl" and medecine != "kt":
             portion = medecine.split()[0]  # Use the first word as the portion
             if portion not in unique_portions_set:
                 enrich_list.append(re.sub(r'\d+$', '', medecine))
