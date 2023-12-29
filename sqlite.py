@@ -15,7 +15,6 @@ for i in liste:
     poso = re.search('<a href=\".+\">(.+)</a>',i)
     if poso:
         tmp = poso.group(1)
-        print(str(j) +":"+ tmp)
         if tmp.startswith(','):
             tmp = tmp[2:]
         c.execute('INSERT INTO EXTRACTION VALUES(\''+str(j)+'\', \''+tmp+'\')')
