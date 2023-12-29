@@ -35,6 +35,17 @@ for i in corpus_medical:
                 unique_portions_set.add(portion)
                 subst.append(medecine + ",.N+subst\n")
 
+    another_token1  = re.search(r'''^[-*]?\s?(\w+)\s:?\s?(\d+|,|\d+.\d)+\s(mg|ml|µg|mcg|g|cp|amp|flacon).+''', i, re.I)
+    if another_token1:
+        medecine = str(another_token1.group(1)).lower()
+        # some special cases that should not be included
+        if not medecine.startswith("ø") and medecine != "témesta" and medecine != "intraveineuse" and medecine != "kardégic"and medecine != "b"and medecine != "crp"and medecine != "kcl" and medecine != "kt":
+            portion = medecine.split()[0]  # Use the first word as the portion
+            if portion not in unique_portions_set:
+                enrich_list.append(re.sub(r'\d+$', '', medecine))
+                unique_portions_set.add(portion)
+                subst.append(medecine + ",.N+subst\n")
+
 # Writing the subts_enrichi.dic File
 count = 1
 for i in enrich_list:
